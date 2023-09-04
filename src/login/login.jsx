@@ -1,37 +1,46 @@
 import React, { useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
 import "./login.css";
+import "react-notifications/lib/notifications.css";
 
 const Login = () => {
-    const username = useRef();
-    const password = useRef();
-    const [redirectToHome, setRedirectToHome] = useState(false);
+  const username = useRef(null);
+  const password = useRef(null);
+  const [redirectToHome, setRedirectToHome] = useState(false);
 
-    if (redirectToHome) {
-      return <Navigate to="/home" />;
-    }
-  
-    const buttonHandler = async (e) => {
-      e.preventDefault();
-  
-      try {
-        const response = await axios.post(
-          "http://192.168.10.141:8080/weather/login",
-          {
-            email: username.current.value,
-            password: password.current.value,
-          }
-        );
-  
-        const authToken=response.data;
-        localStorage.setItem("authToken", authToken);
+  if (redirectToHome) {
+    return <Navigate to="/home" />;
+  }
+
+  const buttonHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://192.168.10.141:8080/weather/login",
+        {
+          email: username.current.value,
+          password: password.current.value,
+        }
+      );
+
+      const authToken = response.data;
+      localStorage.setItem("authToken", authToken);
+      NotificationManager.success("Login successful", "Success");
+      setTimeout(() => {
         setRedirectToHome(true);
-      } catch (error) {
-        console.error("Error logging in:", error);
-      }
-    };
-  
+      }, 2000);
+    } catch (error) {
+      console.error("Error logging in:", error);
+      NotificationManager.error("Login not successful", error.message);
+    }
+  };
+
   return (
     <>
       <div className="background">
@@ -40,12 +49,25 @@ const Login = () => {
       </div>
       <form onSubmit={buttonHandler}>
         <h3>Login Here</h3>
-        <label for="username">Email</label>
-        <input className="input" type="text" placeholder="example@gmail.com" id="username" ref={username}></input>
-        <label for="password">Password</label>
-        <input className="input" type="password" placeholder="********" id="password" ref={password}></input>
+        <label htmlFor="username">Email</label>
+        <input
+          className="input"
+          type="text"
+          placeholder="example@gmail.com"
+          id="username"
+          ref={username}
+        ></input>
+        <label htmlFor="password">Password</label>
+        <input
+          className="input"
+          type="password"
+          placeholder="********"
+          id="password"
+          ref={password}
+        ></input>
         <button className="button">Login</button>
       </form>
+      <NotificationContainer />
     </>
   );
 };

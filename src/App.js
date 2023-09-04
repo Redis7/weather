@@ -18,7 +18,9 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route
             path="/"
-            element={authToken ? <Navigate to="/home" /> : <Login />}
+            element={
+              authToken === "Success" ? <Navigate to="/home" /> : <Login />
+            }
           />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

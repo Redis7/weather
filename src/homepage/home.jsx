@@ -6,7 +6,6 @@ import CurrentWeather from "../today/today";
 import axios from "axios";
 import { Box } from "@mui/material";
 
-
 function Home() {
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   function logout() {
@@ -20,9 +19,7 @@ function Home() {
 
   function handleLogoutCancelled() {
     setShowLogoutConfirmation(false);
-    
   }
-
 
   const [city, setCity] = useState("Rome, IT");
   const [data, setData] = useState([]);
@@ -60,7 +57,7 @@ function Home() {
     ? "App3"
     : "App";
 
-    const isRainyWeather1 =
+  const isRainyWeather1 =
     data.length > 0 && data[0].weatherDescription.includes("rain");
   const isCloudyWeather1 =
     data.length > 0 && data[0].weatherDescription.includes("cloud");
@@ -78,59 +75,57 @@ function Home() {
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
-    {showLogoutConfirmation ? (
-      <div className={`${weatherClass1}`}>
-        <div className="modal-content">
-          <p className="modal-title">Are you sure you want to log out?</p>
-          <div className="modal-buttons">
-            <button
-              onClick={handleLogoutConfirmed}
-              className="modal-button modal-button-yes"
-            >
-              Yes
-            </button>
-            <button
-              onClick={handleLogoutCancelled}
-              className="modal-button modal-button-no"
-            >
-              No
-            </button>
+      {showLogoutConfirmation ? (
+        <div className={`${weatherClass1}`}>
+          <div className="modal-content">
+            <p className="modal-title">Are you sure you want to log out?</p>
+            <div className="modal-buttons">
+              <button
+                onClick={handleLogoutConfirmed}
+                className="modal-button modal-button-yes"
+              >
+                Yes
+              </button>
+              <button
+                onClick={handleLogoutCancelled}
+                className="modal-button modal-button-no"
+              >
+                No
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    ) : (
+      ) : (
+        <div className={`${weatherClass}`}>
+          <div className="left-dashboard">
+            <div className="head">
+              <button className="button5" onClick={logout}>
+                Log Out
+              </button>
 
-
-     <div className={`${weatherClass}`}>
-       <div className="left-dashboard">
-        <div className="head">
-        <button className="button5" onClick={logout}>
-        Log Out
-      </button>
-        
-        <div className="search">
-          <Search onSearchChange={handleSearchChange} />
+              <div className="search">
+                <Search onSearchChange={handleSearchChange} />
+              </div>
+            </div>
+            {data.length > 0 && <CurrentWeather city={city} data={data[0]} />}
+          </div>
+          <div className="right-dashboard">
+            <div className="card">
+              {data.slice(1).map((data, index) => (
+                <WeatherCard
+                  key={index + 1}
+                  city={city}
+                  temperature={data.main.temp}
+                  weather={data.weatherMain}
+                  date={formatDate(data.date)}
+                  icon={data.icon}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-        </div>
-        {data.length > 0 && <CurrentWeather city={city} data={data[0]} />}
-      </div>
-      <div className="right-dashboard">
-        <div className="card">
-          {data.slice(1).map((data, index) => (
-            <WeatherCard
-              key={index + 1}
-              city={city}
-              temperature={data.main.temp}
-              weather={data.weatherMain}
-              date={formatDate(data.date)}
-              icon={data.icon}
-            />
-          ))}
-        </div>
-      </div> 
-     </div>
-     )}
-     </Box>
+      )}
+    </Box>
   );
 }
 

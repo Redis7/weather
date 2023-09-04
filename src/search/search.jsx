@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { AsyncPaginate } from "react-select-async-paginate";
 
-
-
 const Search = ({ onSearchChange }) => {
   const [search, setSearch] = useState(null);
 
@@ -49,7 +47,6 @@ const Search = ({ onSearchChange }) => {
 
   return (
     <div className="search5">
-      
       <div style={{ width: "100%" }}>
         <AsyncPaginate
           placeholder="Search   "

@@ -9,7 +9,7 @@ const CurrentWeather = ({ city, data }) => {
       </div>
       <div className="city-info">
         <div className="city-name">
-          <h1 style={{fontSize:"40px"}}>{city}</h1>
+          <h1 style={{ fontSize: "40px" }}>{city}</h1>
         </div>
         <div className="city-description">
           Weather: {data.weatherDescription.toUpperCase()}
