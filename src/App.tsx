@@ -1,3 +1,4 @@
+import React from "react";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -5,8 +6,9 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+// import Home from "./homepage/home";
+import Login from "./login/login"
 import Home from "./homepage/home";
-import Login from "./login/login";
 
 function App() {
   const authToken = localStorage.getItem("authToken");

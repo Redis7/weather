@@ -1,15 +1,29 @@
-import React from "react";
-import "./card.css";
+import {FC} from 'react';
+import './card.css';
 
-const WeatherCard = ({ city, date, temperature, weather, icon }) => {
-  let weatherClass = "";
+interface WeatherCardProps {
+  city: string;
+  date: string;
+  temperature: number;
+  weather: string;
+  icon: string;
+}
 
-  if (weather.includes("Rain")) {
-    weatherClass = "rainy";
-  } else if (weather.includes("Cloud")) {
-    weatherClass = "cloudy";
+const WeatherCard: FC<WeatherCardProps> = ({
+  city,
+  date,
+  temperature,
+  weather,
+  icon,
+}) => {
+  let weatherClass = '';
+
+  if (weather.includes('Rain')) {
+    weatherClass = 'rainy';
+  } else if (weather.includes('Cloud')) {
+    weatherClass = 'cloudy';
   } else {
-    weatherClass = "default";
+    weatherClass = 'default';
   }
 
   return (

@@ -1,43 +1,43 @@
 import React, { useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-import {
-  NotificationContainer,
-  NotificationManager,
-} from "react-notifications";
+// import {
+//   NotificationContainer,
+//   NotificationManager,
+// } from "react-notifications";
 import "./login.css";
 import "react-notifications/lib/notifications.css";
 
 const Login = () => {
-  const username = useRef(null);
-  const password = useRef(null);
-  const [redirectToHome, setRedirectToHome] = useState(false);
+  const username = useRef<HTMLInputElement | null>(null);
+  const password = useRef<HTMLInputElement | null>(null);
+  const [redirectToHome, setRedirectToHome] = useState<Boolean>(false);
 
   if (redirectToHome) {
     return <Navigate to="/home" />;
   }
 
-  const buttonHandler = async (e) => {
+  const buttonHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
         "http://192.168.10.141:8080/weather/login",
         {
-          email: username.current.value,
-          password: password.current.value,
+          email: username.current!.value,
+          password: password.current!.value,
         }
       );
 
-      const authToken = response.data;
+      const authToken:string = response.data;
       localStorage.setItem("authToken", authToken);
-      NotificationManager.success("Login successful", "Success");
+      // NotificationManager.success("Login successful", "Success");
       setTimeout(() => {
         setRedirectToHome(true);
       }, 2000);
     } catch (error) {
       console.error("Error logging in:", error);
-      NotificationManager.error("Login not successful", error.message);
+      // NotificationManager.error("Login not successful", error.message);
     }
   };
 
@@ -67,7 +67,7 @@ const Login = () => {
         ></input>
         <button className="button">Login</button>
       </form>
-      <NotificationContainer />
+      {/* <NotificationContainer /> */}
     </>
   );
 };

@@ -1,7 +1,21 @@
 import React from "react";
 import "./today.css";
 
-const CurrentWeather = ({ city, data }) => {
+interface CurrentWeatherProps {
+  city: string;
+  data: {
+    icon: string;
+    weatherDescription: string;
+    main: {
+      feelsLike: number;
+      tempMax: number;
+      tempMin: number;
+    };
+  };
+}
+
+
+const CurrentWeather:React.FC<CurrentWeatherProps> = ({ city, data }) => {
   return (
     <div className="weather-content-holder">
       <div className="weather-icon">

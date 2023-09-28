@@ -1,13 +1,27 @@
+import * as React from "react";
 import "./Home.css";
-import WeatherCard from "../card/card";
-import Search from "../search/search";
+import WeatherCard from "../card/card.tsx";
+import Search from "../search/search.tsx";
 import { useState, useEffect } from "react";
-import CurrentWeather from "../today/today";
+import CurrentWeather from "../today/today"
 import axios from "axios";
 import { Box } from "@mui/material";
 
+interface WeatherData {
+  weatherDescription: string;
+  main: {
+    temp: number;
+    feelsLike: number;
+    tempMax: number;  
+    tempMin: number;  
+  };
+  date: string;
+  icon: string;
+}
+
 function Home() {
-  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState<boolean>(false);
+
   function logout() {
     setShowLogoutConfirmation(true);
   }
@@ -21,12 +35,16 @@ function Home() {
     setShowLogoutConfirmation(false);
   }
 
-  const [city, setCity] = useState("Rome, IT");
-  const [data, setData] = useState([]);
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+  const [city, setCity] = useState<string>("Rome, IT");
+  const [data, setData] = useState<WeatherData[]>([]);
+
+
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+
+
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
@@ -34,9 +52,10 @@ function Home() {
     }
   }, []);
 
+
   useEffect(() => {
     axios
-      .get(`http://192.168.10.141:8080/weather/${city}`)
+      .get<WeatherData[]>(`http://192.168.10.141:8080/weather/${city}`)
       .then((response) => {
         setData(response.data);
         console.log(response.data);
@@ -68,16 +87,16 @@ function Home() {
     ? "modal-background3"
     : "modal-background";
 
-  const handleSearchChange = (searchData) => {
+  const handleSearchChange = (searchData:{label:string}) => {
     console.log("Search data:", searchData);
     setCity(searchData.label);
   };
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
-      {showLogoutConfirmation ? (
-        <div className={`${weatherClass1}`}>
-          <div className="modal-content">
+    {showLogoutConfirmation ? (
+      <div className={`${weatherClass1}`}>
+              <div className="modal-content">
             <p className="modal-title">Are you sure you want to log out?</p>
             <div className="modal-buttons">
               <button
@@ -94,38 +113,39 @@ function Home() {
               </button>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className={`${weatherClass}`}>
-          <div className="left-dashboard">
-            <div className="head">
-              <button className="button5" onClick={logout}>
-                Log Out
-              </button>
+      </div>
+    ) : (
+      <div className={`${weatherClass}`}>
+        <div className="left-dashboard">
+          <div className="head">
+            <button className="button5" onClick={logout}>
+              Log Out
+            </button>
 
-              <div className="search">
-                <Search onSearchChange={handleSearchChange} />
-              </div>
+            <div className="search">
+              <Search onSearchChange={handleSearchChange} />
             </div>
-            {data.length > 0 && <CurrentWeather city={city} data={data[0]} />}
           </div>
-          <div className="right-dashboard">
-            <div className="card">
-              {data.slice(1).map((data, index) => (
-                <WeatherCard
-                  key={index + 1}
-                  city={city}
-                  temperature={data.main.temp}
-                  weather={data.weatherMain}
-                  date={formatDate(data.date)}
-                  icon={data.icon}
-                />
-              ))}
-            </div>
+          {data.length > 0 && <CurrentWeather city={city} data={data[0]} />}
+        </div>
+        <div className="right-dashboard">
+          <div className="card">
+            {data.slice(1).map((data, index) => (
+              <WeatherCard
+                key={index + 1}
+                city={city}
+                temperature={data.main.temp}
+                weather={data.weatherDescription}
+                date={formatDate(data.date)}
+                icon={data.icon}
+              />
+            ))}
           </div>
         </div>
-      )}
-    </Box>
+      </div>
+    )}
+  </Box>
+
   );
 }
 
